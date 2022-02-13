@@ -2,7 +2,7 @@
  * Lab 2 draft 4
  *
  * Created: 1/29/2022 11:07:43 AM
- * Author : Ross Miller
+ * Author : millross
  */ 
 #include <util/delay.h>
 #define F_CPU 16000000UL
