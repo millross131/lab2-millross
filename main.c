@@ -5,6 +5,12 @@
  * Author : Ross Miller
  */ 
 
+volatile int flagged = 1;
+int letter = 0;
+int width = 0;
+volatile int overflow = 0;
+int changeChar = 1;
+char String[25];
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -15,22 +21,9 @@
 #define BAUD_RATE 9600
 #define BAUD_PRESCALER (((F_CPU / (BAUD_RATE * 16UL))) - 1)
 
-
-int rising = 1;
-volatile int flagged = 1;
-volatile int start = 0;
-volatile int ticSize = 0;
-int letter = 0;
-int size = 0;
-volatile int last;
-volatile int overflow = 0;
-volatile int overflow2 = 0;
-int newChar = 1;
-char String[25];
-
 void Initialize(){
 	cli();
-	DDRB &= ~(1<<DDB0);
+	DDRD &= ~(1<<DDD7);
 	DDRB |= (1<<DDB1);
 	DDRB |= (1<<DDB2);
 	DDRB |= (1<<DDB3);
@@ -141,30 +134,25 @@ ISR(TIMER1_CAPT_vect){
 	if(flagged) {
 		
 		
-		size = overflow;
-		if(size > 7 && size <100){
-			sprintf(String,"dot \n");
-			UART_putstring(String);
+		width = overflow;
+		if(width < 130){
 			PORTB |= (1<<PORTB1);
 			_delay_ms(50);
 			PORTB &=  ~(1<<PORTB1);
-			//letter = letter * 10 +1;
-			if(newChar){
+			if(changeChar){
 				letter = 1;
-				newChar = 0;
+				changeChar = 0;
 			} else{
 				letter = letter * 10 +1;
 			}
 		}
-		else if(size > 100 && size < 300){
-			sprintf(String,"dash \n");
-			UART_putstring(String);
+		else if(width > 130 && width < 600){
 			PORTB |= (1<<PORTB2);
 			_delay_ms(50);
 			PORTB &=  ~(1<<PORTB2);
-			if(newChar){
+			if(changeChar){
 				letter = 2;
-				newChar = 0;
+				changeChar = 0;
 			} else{
 				letter = letter * 10 +2;
 			}
@@ -175,14 +163,12 @@ ISR(TIMER1_CAPT_vect){
 		flagged = 1;
 		sprintf(String, "size %u\n", overflow);
 		UART_putstring(String);
-		if(overflow >= 400){
-			sprintf(String,"dash \n");
-			UART_putstring(String);
+		if(overflow >= 600){
 			PORTB |= (1<<PORTB3);
 			_delay_ms(50);
 			PORTB &=  ~(1<<PORTB3);
 			morseToLetter(letter);
-			newChar = 1;
+			changeChar = 1;
 		}
 	}
 		}
