@@ -18,7 +18,7 @@ void Initialize(){
 	DDRB |= (1<<DDB2);
 	DDRB |= (1<<DDB3);
 	DDRB |= (1<<DDB4);
-	DDRB &= ~(1<<DDB0);
+	DDRD &= ~(1<<DDB7);
 
 	TCCR1B &= ~(1<<WGM12);
 	TCCR1B &= ~(1<<WGM13);
