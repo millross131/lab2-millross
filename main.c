@@ -2,7 +2,7 @@
  * Lab 2 draft 4
  *
  * Created: 2/11/2022 11:24:27 AM
- * Author : Ross Miller
+ * Author : millross
  */ 
 
 volatile int flagged = 1;
