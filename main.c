@@ -1,32 +1,32 @@
 /*
- *
+ * Lab 2 draft 4
  *
  * Created: 2/11/2022 11:24:27 AM
  * Author : Ross Miller
  */ 
 
-#define F_CPU 16000000UL
-#define BAUD_RATE 9600
-#define BAUD_PRESCALER (((F_CPU / (BAUD_RATE * 16UL))) - 1)
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "uart.h"
+#define F_CPU 16000000UL
+#define BAUD_RATE 9600
+#define BAUD_PRESCALER (((F_CPU / (BAUD_RATE * 16UL))) - 1)
 
-char String[25];
 
+int rising = 1;
+volatile int flagged = 1;
+volatile int start = 0;
+volatile int ticSize = 0;
 int letter = 0;
 int size = 0;
 volatile int last;
 volatile int overflow = 0;
 volatile int overflow2 = 0;
-int rising = 1;
-volatile int flagged = 1;
-volatile int start = 0;
-volatile int ticSize = 0;
 int newChar = 1;
+char String[25];
 
 void Initialize(){
 	cli();
